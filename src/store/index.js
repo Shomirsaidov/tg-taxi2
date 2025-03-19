@@ -11,9 +11,23 @@ export default createStore({
     routeInfo: null,
     langLoaded: null,
     successMessage: 'Ваш заказ принят',
-    successModal: false
+    successModal: false,
+    offeredPrice: null,
+    zoom: 12
   },
   getters: {
+    midPoint(state) {
+      if(state.chooseMode == 'start') {
+        return [state.startPoint.lat, state.startPoint.lon];
+      } 
+
+      return [
+        (state.startPoint.lat + state.endPoint.lat) / 2,
+        (state.startPoint.lon + state.endPoint.lon) / 2
+      ];
+
+
+    }
   },
   mutations: {
   },

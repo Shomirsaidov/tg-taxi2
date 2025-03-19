@@ -101,7 +101,9 @@ export default {
             a.title = p.title
 
             this.$store.state.endPoint = a
+            this.$store.state.zoom = 11
             console.log(this.$store.state.endPoint);
+
 
             await this.calcDetails();
         }

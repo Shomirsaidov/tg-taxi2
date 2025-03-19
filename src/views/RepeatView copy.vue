@@ -15,12 +15,12 @@
 
 
     <!-- Map Section -->
-    <div v-if="!this.$store.state.modalOn && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map " >
+    <div v-if="!this.$store.state.modalOn && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map" >
 
       <l-map
-        class="w-full"
-        :zoom="this.$store.state.zoom"
-        :center="this.$store.getters.midPoint"
+        class="w-full "
+        :zoom="13"
+        :center="[this.$store.state.startPoint.lat, this.$store.state.startPoint.lon]"]
       >
         <l-tile-layer :url="tileLayerUrl" :attribution="tileLayerAttribution" />
         <!-- Markers -->
@@ -192,11 +192,12 @@
 
 
     <div class="flex items-center justify-between mt-2" v-if="this.$store.state.routeInfo">
-          <button v-if="index !== 3" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.estimated_duration_text  }}</button>
+          <button class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.estimated_duration_text  }}</button>
           
-          <button v-if="index == 0" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.taxi_price }} <span v-if="this.$store.state.offeredPrice">{{ this.$store.state.routeInfo.currency_symbol }}</span></button>
-          <button v-if="index == 1" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.private_price }} <span v-if="this.$store.state.offeredPrice">{{ this.$store.state.routeInfo.currency_symbol }}</span></button>
-          <button v-if="index == 2" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.moto_price }} <span v-if="this.$store.state.offeredPrice">{{ this.$store.state.routeInfo.currency_symbol }}</span></button>
+          <button v-if="index == 0" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.taxi_price }}</button>
+          <button v-if="index == 1" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.private_price }}</button>
+          <button v-if="index == 2" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.moto_price }}</button>
+          <button v-if="index == 3" class="bg-blue-200 rounded px-2 text-black">{{ this.$store.state.routeInfo.transport_type_dict.taxi_price }}</button>
 
     </div>
 
@@ -220,7 +221,7 @@
         <button @click="() => this.$store.state.offer = true" class="flex-1 p-2 text-sm text-white border shadow-xl rounded-xl hover:bg-blue-100 my-blue-2">
           {{ this.$store.state.langLoaded.offer_price_btn }}
         </button>
-        <button @click="createOrder" class="flex-1 p-2 text-sm text-white  rounded-xl shadow-xl my-blue">
+        <button @click="createOrder" class="flex-1 p-2 text-sm text-white  rounded-xl shadow-xl hover:bg-blue-600 my-blue">
           <span v-if="!this.creatingOrder">
             {{ this.$store.state.langLoaded.confirm_order_btn }}
           </span>
@@ -259,7 +260,7 @@ import { LMap, LTileLayer, LMarker, LPopup,LPolyline } from "vue3-leaflet";
 import axios from "axios";
 
 export default {
-  name: "TaxiOrderComponent",
+  name: "TaxiOrderRepeatComponent",
   components: {
     LMap,
     LTileLayer,
@@ -328,31 +329,7 @@ export default {
         [end.lat, end.lon]      // End point
       ];
     },
-    finalOrderData() {
-      if(this.$store.state.offeredPrice) {
-        return {
-            uid: this.$route.query.uid,
-            tg_id: this.$route.query.tg_id,
-            place_id_from : this.$store.state.startPoint.place_id,
-            place_id_to: this.$store.state.endPoint.place_id,
-            passenger_pay_methods: this.selectedPaymentOpts,
-            passenger_transport_type: this.selectedTransports,
-            comment: this.commentsForOrder,
-            price: this.$store.state.offeredPrice,
-        }
-      }
-
-      return {
-          uid: this.$route.query.uid,
-          tg_id: this.$route.query.tg_id,
-          place_id_from : this.$store.state.startPoint.place_id,
-          place_id_to: this.$store.state.endPoint.place_id,
-          passenger_pay_methods: this.selectedPaymentOpts,
-          passenger_transport_type: this.selectedTransports,
-          comment: this.commentsForOrder,
-      }
-
-    }
+    
   },
   async mounted() {
     // When the component is mounted, set the map as ready
@@ -367,21 +344,10 @@ export default {
       },
       immediate: true // Optional: Trigger the handler immediately with the current value
     },
-    'selectedPaymentOpts': {
-      handler(newValue, oldValue) {
-        console.log(`payment changed from ${oldValue} to ${newValue}`);
-        if(newValue.includes(this.$store.state.langLoaded.method_any)) {
-          this.selectedPaymentOpts.push(
-            this.$store.state.langLoaded.method_cash,
-            this.$store.state.langLoaded.method_wallets,
-            this.$store.state.langLoaded.method_card,
-            this.$store.state.langLoaded.method_balance
-          )
-        }
-      },
-    }
+    
   },
   methods: {
+
     showPayOptions() {
       $('.payment_options').slideToggle();
     },
@@ -393,18 +359,8 @@ export default {
       const optionIndex = this.selectedOptions.indexOf(index);
       if (optionIndex === -1) {
         this.selectedOptions.push(index);
-
-        if(index == 3) {
-          this.selectedOptions.push(0,1,2)
-        }
-
       } else {
         this.selectedOptions.splice(optionIndex, 1);
-
-        if(index == 3) {
-          this.selectedOptions = this.selectedOptions.filter(num => ![0, 1, 2].includes(num));
-        }
-
       }
 
       this.selectedTransports = []
@@ -428,12 +384,7 @@ export default {
         this.infoModal = true;
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
-        this.$store.state.startPoint = {
-          title: response.data.city, 
-          lat: response.data.latitude,
-          lon: response.data.longitude,
-
-        };
+        
 
         this.transportOptions[0].label = this.$store.state.langLoaded.transport_taxi;
         this.transportOptions[1].label = this.$store.state.langLoaded.transport_private;
@@ -441,6 +392,9 @@ export default {
         this.transportOptions[3].label = this.$store.state.langLoaded.transport_all;
 
         console.log(this.$store.state.langLoaded)
+
+        this.calcDetails();
+
       }
 
 
@@ -448,11 +402,51 @@ export default {
     isSelected(index) {
       return this.selectedOptions.includes(index);
     },
+    async calcDetails() {
+
+
+      console.log('getting details...')
+      console.log(this.$store.state.startPoint);
+
+
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/pre-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from: this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+               
+            })
+
+
+      console.log(response.data);
+      this.$store.state.routeInfo = response.data
+
+    },
     async createOrder() {
 
       this.creatingOrder = true
 
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
+      console.log({
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from : this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+                passenger_pay_methods: this.selectedPaymentOpts,
+                passenger_transport_type: this.selectedTransports,
+                comment: this.commentsForOrder,
+                price: 0,
+            })
+
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from : this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+                passenger_pay_methods: this.selectedPaymentOpts,
+                passenger_transport_type: this.selectedTransports,
+                comment: this.commentsForOrder,
+                price: 0,
+            })
 
       if(response.data.status == 'ok') {
         this.$store.state.successModal = true;
@@ -469,7 +463,7 @@ export default {
 <style >
 
 .map {
-  min-height: 40vh;
+  min-height: 400px;
 }
 
 .my-bg {
