@@ -62,14 +62,14 @@
           this.$store.state.chooseMode = 'start'
         }" class="flex items-center space-x-3 px-3 py-3 border rounded-md text-sm shadow-sm  bg-white cursor-pointer">
           <img src="../assets/target.svg" alt="">
-          <div class="w-full text-start">{{ this.$store.state.langLoaded.enter_address_from }}</div>
+          <div class="w-full text-start">{{ this.$store.state.startPoint.title }}</div>
         </div>
         <div @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'end'
         }" class="flex items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm bg-white cursor-pointer">
           <img src="../assets/location.svg" alt="">
-          <div class="w-full text-start">{{ this.$store.state.langLoaded.enter_address_to }}</div>
+          <div class="w-full text-start">{{ this.endText }}</div>
 
         </div>
       </div>
@@ -312,6 +312,14 @@ export default {
     };
   },
   computed: {
+    
+    endText() {
+      if(this.$store.state.startPoint.title == this.$store.state.langLoaded.enter_address_from) {
+        return this.$store.state.langLoaded.enter_address_to;
+      } else {
+        return this.$store.state.endPoint.title;
+      }
+    },
     routeCoordinates() {
       const start = this.$store.state.startPoint;
       const end = this.$store.state.endPoint;
@@ -434,12 +442,16 @@ export default {
         this.infoModal = true;
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
+        let textFrom = this.$store.state.langLoaded.enter_address_from;
+
         this.$store.state.startPoint = {
-          title: response.data.city, 
+          title: textFrom, 
           lat: response.data.latitude,
           lon: response.data.longitude,
 
         };
+
+        console.log(this.$store.state.startPoint)
 
         this.transportOptions[0].label = this.$store.state.langLoaded.transport_taxi;
         this.transportOptions[1].label = this.$store.state.langLoaded.transport_private;
