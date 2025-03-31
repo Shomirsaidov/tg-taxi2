@@ -62,14 +62,14 @@
           this.$store.state.chooseMode = 'start'
         }" class="flex items-center space-x-3 px-3 py-3 border rounded-md text-sm shadow-sm  bg-white">
           <img src="../assets/target.svg" alt="">
-          <div class="w-full text-start">{{ this.$store.state.startPoint.title }}</div>
+          <div class="w-full text-start">{{ this.$store.state.langLoaded.enter_address_from }}</div>
         </div>
         <div @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'end'
         }" class="flex items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm bg-white">
           <img src="../assets/location.svg" alt="">
-          <div class="w-full text-start">{{ this.$store.state.endPoint.title }}</div>
+          <div class="w-full text-start">{{ this.$store.state.langLoaded.enter_address_to }}</div>
 
         </div>
       </div>
