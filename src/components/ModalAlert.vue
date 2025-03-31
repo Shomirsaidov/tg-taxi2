@@ -27,13 +27,18 @@
 
 export default {
     name: 'Modal Alert',
+    mounted() {
+        if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready(); // Telegram WebApp готов
+        }
+    },
     methods: {
         closeWebApp() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            } else {
-                console.error("Telegram WebApp не обнаружен");
-            }
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.close(); // Закрытие приложения
+        } else {
+            console.error("Ошибка: Telegram WebApp не обнаружен!");
+        }
         }
     }
 }
