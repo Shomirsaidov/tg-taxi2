@@ -1,19 +1,34 @@
 <template>
 
     <div class="h-screen w-full absolute px-8 top-0 bg-gray-400 z-50 flex justify-center items-center bg-opacity-75 backdrop-blur">
-        <div class="border-2 rounded-lg my-bg p-4 space-y-10 pt-10">
+        <div class="border-2 rounded-lg my-bg p-4 space-y-5 pt-10">
 
-            <div class="flex justify-between border-2 px-3 bg-white rounded-lg">
+            <div class="flex justify-between border-2 px-3 space-x-3 bg-white rounded-lg">
                 <div  class="flex">
                     <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/arrow-left.svg" alt="">
-                    <input placeholder="кирова 56" @input="updateLocs" v-model="inpValue" class="text-lg p-3 outline-none font-semibold" type="text">
+                    <input :placeholder="$store.state.langLoaded.enter_address_to" @input="updateLocs" v-model="inpValue" class="text-lg p-3 outline-none font-semibold" type="text">
                 </div>
-                <img @click="() => this.$store.state.modalOn = false" src="../assets/clear.svg" alt="">
+                <!-- <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/clear.svg" alt=""> -->
             </div>
 
             <div>
 
-                <div v-if="addresses.length == 0" class="flex items-center justify-center ">
+                
+
+                <div 
+                class="flex items-center space-x-3 border-b-2 border-gray-300 p-3"
+                v-if="!inpValue"
+                @click="selectPoint(this.$store.state.recentLocation, true)">
+                    <img src="../assets/location.svg" alt="">
+                    <div>
+                        <div class="text-start font-bold">{{ this.$store.state.langLoaded.last_location_text }}</div>
+                        <div class="text-start text-gray-400">{{ this.$store.state.recentLocation.full_address }}</div>
+                    </div>
+                    
+
+                </div>
+
+                <div v-if="addresses.length == 0" class="flex items-center mt-4 justify-center ">
                     <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-e-4 border-blue-500"></div>
                 </div>
 
@@ -75,7 +90,7 @@ export default {
         }
       }, 1500); // Delay in milliseconds
     },
-    async selectPoint(p) {
+    async selectPoint(p, recent=false) {
 
         if(this.$store.state.chooseMode == 'start') {
 
@@ -85,7 +100,15 @@ export default {
             })
 
             let a = response.data
-            a.title = p.title
+
+
+            if(recent) {
+              a.title = a.street
+            } else {
+              a.title = p.title
+            }
+
+
 
             this.$store.state.startPoint = a
             console.log(this.$store.state.startPoint);
@@ -98,10 +121,19 @@ export default {
             })
 
             let a = response.data
-            a.title = p.title
+
+            if(recent) {
+              a.title = a.street
+            } else {
+              a.title = p.title
+            }
+
 
             this.$store.state.endPoint = a
-            this.$store.state.zoom = 11
+
+
+
+            // this.$store.state.zoom = 11
             console.log(this.$store.state.endPoint);
 
 
@@ -124,7 +156,25 @@ export default {
       console.log(response.data);
       this.$store.state.routeInfo = response.data
 
+
+      this.$store.state.zoom = this.setNeededZoom();
+
+
+    },
+    setNeededZoom() {
+
+      let distance = this.$store.state.routeInfo.total_distance
+
+      console.log(distance)
+
+      let optimalZoom =  -1.83 * Math.log(distance) + 28.19
+
+      console.log(optimalZoom)
+
+      return optimalZoom;
     }
+
+
   },
 };
 

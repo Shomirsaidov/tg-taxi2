@@ -66,6 +66,7 @@
     },
     methods: {
       async repeatTrip(trip) {
+
         
         let response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
                 place_id: trip.data.place_id_from,
@@ -80,6 +81,9 @@
                 lang_code: "ru"
             })
         console.log(response.data)
+
+
+        this.$store.state.chooseMode = 'end';
 
 
         this.$store.state.endPoint = {title: response.data.street, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };

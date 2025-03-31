@@ -7,8 +7,8 @@
             </div>
             <h2 class="text-xl font-bold">Что-то пошло не так. Скорее всего у вас уже есть активный заказ. Закройте приложение и попробуйте позже</h2>
             <div class=" flex space-x-2 font-semibold">
-                <button class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
-                    Закрыть приложение
+                <button @click="closeWebApp" class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
+                    {{ this.$store.state.langLoaded.close_app }}
                 </button>
                 
                 
@@ -25,7 +25,16 @@
 
 export default {
     name: 'Modal Alert',
-    props: ['q']
+    props: ['q'],
+    methods: {
+        closeWebApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close();
+            } else {
+                console.error("Telegram WebApp не обнаружен");
+            }
+        }
+    }
 }
 
 

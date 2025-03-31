@@ -13,7 +13,9 @@ export default createStore({
     successMessage: 'Ваш заказ принят',
     successModal: false,
     offeredPrice: null,
-    zoom: 12
+    zoom: 12,
+    error: false,
+    errorMessage: ''
   },
   getters: {
     midPoint(state) {

@@ -5,13 +5,13 @@
             <div class="flex justify-end">
                 <img @click="() => this.$store.state.cancel = false" src="../assets/clear.svg" alt="">
             </div>
-            <h2 class="text-xl font-bold">Вы уверены, что хотите отменить заказ?</h2>
+            <h2 class="text-xl font-bold">{{ this.$store.state.langLoaded.cancel_question }}</h2>
             <div class=" flex space-x-2 font-semibold">
-                <button class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
-                    Да, отменить заказ
+                <button @click="closeWebApp" class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
+                    {{ this.$store.state.langLoaded.cancel_order_btn }}
                 </button>
-                <button class="flex-1 p-3 text-white  rounded-xl shadow-xl hover:bg-blue-600 my-blue">
-                    Нет, продолжить
+                <button @click="() => this.$store.state.cancel = false" class="flex-1 p-3 text-white  rounded-xl shadow-xl hover:bg-blue-600 my-blue">
+                    {{ this.$store.state.langLoaded.continue_btn }}
                 </button>
                 
             </div>
@@ -26,7 +26,16 @@
 
 
 export default {
-    name: 'Modal Alert'
+    name: 'Modal Alert',
+    methods: {
+        closeWebApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close();
+            } else {
+                console.error("Telegram WebApp не обнаружен");
+            }
+        }
+    }
 }
 
 

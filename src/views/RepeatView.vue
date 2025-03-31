@@ -8,6 +8,7 @@
     <ModalView v-if="this.$store.state.modalOn"/>
     <ModalPrompt v-if="this.$store.state.offer"/>
     <ModalAlert v-if="this.$store.state.cancel"/>
+    <ModalError v-if="this.$store.state.error"/>
 
     <ModalInfo v-if="this.infoModal"/>
     <ModalSuccess v-if="this.$store.state.successModal"/>
@@ -250,6 +251,8 @@ import $ from "jquery";
 
 import ModalView from "@/components/ModalView.vue";
 import ModalAlert from "@/components/ModalAlert.vue";
+import ModalError from "@/components/ModalError.vue";
+
 import ModalPrompt from "@/components/ModalPrompt.vue";
 import ModalInfo from "@/components/ModalMessage.vue";
 import ModalSuccess from "@/components/ModalSuccess.vue";
@@ -259,7 +262,7 @@ import { LMap, LTileLayer, LMarker, LPopup,LPolyline } from "vue3-leaflet";
 import axios from "axios";
 
 export default {
-  name: "RepeatTaxiOrderComponent",
+  name: "TaxiOrderComponent",
   components: {
     LMap,
     LTileLayer,
@@ -269,7 +272,8 @@ export default {
     ModalView,
     ModalAlert,
     ModalPrompt,
-    ModalSuccess
+    ModalSuccess,
+    ModalError
   },
   data() {
     return {
@@ -385,24 +389,6 @@ export default {
     showPayOptions() {
       $('.payment_options').slideToggle();
     },
-    async calcDetails() {
-      console.log('getting details...')
-      console.log(this.$store.state.startPoint);
-
-
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/pre-order/`, {
-                uid: this.$route.query.uid,
-                tg_id: this.$route.query.tg_id,
-                place_id_from: this.$store.state.startPoint.place_id,
-                place_id_to: this.$store.state.endPoint.place_id,
-              
-            })
-
-
-      console.log(response.data);
-      this.$store.state.routeInfo = response.data
-
-    },
     selectOption(index) {
       if (!this.selectedOptions) {
         this.selectedOptions = [];
@@ -441,6 +427,8 @@ export default {
                 tg_id: this.$route.query.tg_id
             })
 
+      this.$store.state.recentLocation = response.data.predefined_place_id_from;
+
       console.log(response); 
       if(response.status !== 200) {
         this.infoModal = true;
@@ -457,6 +445,7 @@ export default {
 
         this.calcDetails();
 
+
       }
 
 
@@ -464,18 +453,61 @@ export default {
     isSelected(index) {
       return this.selectedOptions.includes(index);
     },
+    async calcDetails() {
+      console.log('getting details...')
+      console.log(this.$store.state.startPoint);
+      console.log(this.$store.state.endPoint);
+
+
+      const response = await axios.post(`${process.env.VUE_APP_API_URL}/pre-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id,
+                place_id_from: this.$store.state.startPoint.place_id,
+                place_id_to: this.$store.state.endPoint.place_id,
+              
+            })
+
+
+      console.log(response.data);
+      this.$store.state.routeInfo = response.data
+      this.$store.state.zoom = this.setNeededZoom();
+      
+    },
+    setNeededZoom() {
+
+      let distance = this.$store.state.routeInfo.total_distance
+
+      console.log(distance)
+
+      let optimalZoom =  -1.83 * Math.log(distance) + 28.19
+
+      console.log(optimalZoom)
+
+      return optimalZoom;
+
+    },
     async createOrder() {
 
-      this.creatingOrder = true
 
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
+      console.log(this.selectedPaymentOpts)
 
-      if(response.data.status == 'ok') {
-        this.$store.state.successModal = true;
-        this.$store.state.successMessage = response.data.message;
-        this.creatingOrder = false
+      if(this.selectedPaymentOpts.length !== 0  && this.selectedTransports.length !== 0) {
+
+        this.creatingOrder = true
+        
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
+
+        if(response.data.status == 'ok') {
+          this.$store.state.successModal = true;
+          this.$store.state.successMessage = response.data.message;
+          this.creatingOrder = false
+
+        }
 
       }
+
+
+      
             
     }
   },

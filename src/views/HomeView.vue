@@ -8,6 +8,7 @@
     <ModalView v-if="this.$store.state.modalOn"/>
     <ModalPrompt v-if="this.$store.state.offer"/>
     <ModalAlert v-if="this.$store.state.cancel"/>
+    <ModalError v-if="this.$store.state.error"/>
 
     <ModalInfo v-if="this.infoModal"/>
     <ModalSuccess v-if="this.$store.state.successModal"/>
@@ -250,6 +251,8 @@ import $ from "jquery";
 
 import ModalView from "@/components/ModalView.vue";
 import ModalAlert from "@/components/ModalAlert.vue";
+import ModalError from "@/components/ModalError.vue";
+
 import ModalPrompt from "@/components/ModalPrompt.vue";
 import ModalInfo from "@/components/ModalMessage.vue";
 import ModalSuccess from "@/components/ModalSuccess.vue";
@@ -269,7 +272,8 @@ export default {
     ModalView,
     ModalAlert,
     ModalPrompt,
-    ModalSuccess
+    ModalSuccess,
+    ModalError
   },
   data() {
     return {
@@ -423,6 +427,8 @@ export default {
                 tg_id: this.$route.query.tg_id
             })
 
+      this.$store.state.recentLocation = response.data.predefined_place_id_from;
+
       console.log(response); 
       if(response.status !== 200) {
         this.infoModal = true;
@@ -450,16 +456,26 @@ export default {
     },
     async createOrder() {
 
-      this.creatingOrder = true
 
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
+      console.log(this.selectedPaymentOpts)
 
-      if(response.data.status == 'ok') {
-        this.$store.state.successModal = true;
-        this.$store.state.successMessage = response.data.message;
-        this.creatingOrder = false
+      if(this.selectedPaymentOpts.length !== 0 && this.selectedTransports.length !== 0) {
+
+        this.creatingOrder = true
+        
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
+
+        if(response.data.status == 'ok') {
+          this.$store.state.successModal = true;
+          this.$store.state.successMessage = response.data.message;
+          this.creatingOrder = false
+
+        }
 
       }
+
+
+      
             
     }
   },
