@@ -53,7 +53,7 @@
 
     <div class="flex flex-col justify-between h-full my-bg rounded-t-xl" v-if="this.$store.state.langLoaded">
 
-      <div class="my-bg rounded-t-xl mt-0 p-4">
+      <div class="my-bg rounded-t-xl mt-0 p-3">
 
       <!-- Address Fields -->
       <div class="mt-1 space-y-2">
@@ -379,6 +379,14 @@ export default {
       handler(newValue, oldValue) {
         console.log(`startPoint changed from ${oldValue} to ${newValue}`);
         // this.triggerAction(newValue);
+      },
+      immediate: true // Optional: Trigger the handler immediately with the current value
+    },
+    '$store.state.endPoint': {
+      handler(newValue, oldValue) {
+        console.log(`endPoint changed from ${oldValue} to ${newValue}`);
+        
+        $('.payment_options').slideToggle();
       },
       immediate: true // Optional: Trigger the handler immediately with the current value
     },
