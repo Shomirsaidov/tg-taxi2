@@ -56,7 +56,7 @@
       <div class="my-bg rounded-t-xl mt-0 p-4">
 
       <!-- Address Fields -->
-      <div class="mt-4 space-y-2">
+      <div class="mt-1 space-y-2">
         <div @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'start'
@@ -89,6 +89,19 @@
 
       <div class="hidden payment_options">
         <div clas="bg-white">
+
+        <div class="bg-white p-2 px-5 border-b flex items-center">
+          <label class="flex-1 text-start" for="p5">{{ this.$store.state.langLoaded.method_any }}</label>
+          <input
+            id="p5"
+            :value="this.$store.state.langLoaded.method_any"
+            v-model="selectedPaymentOpts"
+
+            type="checkbox"
+            class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
+          />
+        </div>
+
         <div class="bg-white p-2 px-5 border-b flex items-center">
           <label class="flex-1 text-start" for="p1">{{ this.$store.state.langLoaded.method_cash }}</label>
           <input
@@ -132,17 +145,7 @@
             class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
           />
         </div>
-        <div class="bg-white p-2 px-5 border-b flex items-center">
-          <label class="flex-1 text-start" for="p5">{{ this.$store.state.langLoaded.method_any }}</label>
-          <input
-            id="p5"
-            :value="this.$store.state.langLoaded.method_any"
-            v-model="selectedPaymentOpts"
-
-            type="checkbox"
-            class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
-          />
-        </div>
+        
       </div>
 
 
@@ -173,7 +176,7 @@
       isSelected(index) ? 'my-blue text-white' : 'bg-white'
     ]"
   >
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between ">
       <div class="flex items-center space-x-2">
         <img :src="option.icon" alt="" />
         <div :class="isSelected(index) ? 'text-lgg font-semibold' : 'text-lgg'">
@@ -206,7 +209,7 @@
 </div>
 
 
-      <div class="mt-3 mb-20">
+      <div class="mt-5 mb-20">
           <textarea v-model="commentsForOrder" :placeholder="this.$store.state.langLoaded.enter_order_comment_btn" class="w-full px-3 py-2 rounded-md text-sm focus:ring focus:ring-blue-200 focus:outline-none"></textarea>
       </div>
 

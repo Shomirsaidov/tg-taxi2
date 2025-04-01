@@ -17,7 +17,8 @@
 
                 <div 
                 class="flex items-center space-x-3 border-b-2 border-gray-300 p-3 cursor-pointer"
-                v-if="!inpValue"
+                v-if="!inpValue && $store.state.chooseMode == 'start'"
+                
                 @click="selectPoint(this.$store.state.recentLocation, true)">
                     <img src="../assets/location.svg" alt="">
                     <div>
