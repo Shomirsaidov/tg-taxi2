@@ -53,7 +53,7 @@
 
     <div class="flex flex-col justify-between h-full my-bg rounded-t-xl" v-if="this.$store.state.langLoaded">
 
-      <div class="my-bg rounded-t-xl mt-0 p-3">
+      <div class="my-bg rounded-t-xl mt-0 p-5">
 
       <!-- Address Fields -->
       <div class="mt-1 space-y-2">
