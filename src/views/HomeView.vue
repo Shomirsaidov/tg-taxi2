@@ -443,6 +443,16 @@ export default {
           this.selectedPaymentOpts = this.selectedPaymentOpts.filter(item => item !== 'any');
         }
 
+
+        if(!hasAny && newValue.length == 4) {
+          this.selectedPaymentOpts = [
+            'any',
+            'cash',
+            'e-wallets',
+            'card',
+            'balance'
+          ];
+        }
         
 
         console.log(`after payment changed from ${oldValue} to ${newValue}`);
