@@ -333,7 +333,7 @@ export default {
     },
 
     disabledOrder() {
-      if(this.selectedPaymentOpts.length !== 0 && this.selectedTransports.length !== 0) {
+      if(this.selectedPaymentOpts.length !== 0 && this.selectedTransports.length !== 0 && this.$store.state.startPoint.title !== this.$store.state.langLoaded.enter_address_from) {
         return 0;
       }
       return 1;
@@ -413,32 +413,42 @@ export default {
       },
       immediate: true // Optional: Trigger the handler immediately with the current value
     },
-    'selectedPaymentOpts': {
+    selectedPaymentOpts: {
       handler(newValue, oldValue) {
-        console.log(`payment changed from ${oldValue} to ${newValue}`);
+        console.log(`after payment changed from ${oldValue} to ${newValue}`);
 
-        
-        const anyTypeDisselected = oldValue.includes('any') && !newValue.includes('any');
+        const hasAny = newValue.includes('any');
+        const hadAny = oldValue.includes('any');
+        const anyTypeDisselected = hadAny && !hasAny;
 
-        console.log(anyTypeDisselected); // true if 3 is only in oldArray
-
-        if(anyTypeDisselected) {
-          this.selectedPaymentOpts = [];
+        // If 'any' was deselected, clear all selections
+        if (anyTypeDisselected && oldValue.length == 5) {
+          if (this.selectedPaymentOpts.length !== 0) {
+            this.selectedPaymentOpts = [];
+          }
+          return;
         }
 
-
-        if(newValue.includes('any')) {
-          this.selectedPaymentOpts.push(
+        // If 'any' is selected, set the full list only if not already set
+        if (!hadAny && hasAny && newValue.length !== 5) {
+          this.selectedPaymentOpts = [
+            'any',
             'cash',
             'e-wallets',
             'card',
             'balance'
-          )
+          ];
+        } else if(hasAny && newValue.length < 5) {
+          console.log('inside my block !')
+          this.selectedPaymentOpts = this.selectedPaymentOpts.filter(item => item !== 'any');
         }
 
+        
 
-
+        console.log(`after payment changed from ${oldValue} to ${newValue}`);
       },
+      deep: true,
+      immediate: false
     }
   },
   methods: {
@@ -446,6 +456,9 @@ export default {
       $('.payment_options').slideToggle();
     },
     selectOption(index) {
+
+      console.log(this.selectOptions);
+       
       if (!this.selectedOptions) {
         this.selectedOptions = [];
       }
@@ -459,6 +472,7 @@ export default {
         }
 
       } else {
+
         this.selectedOptions.splice(optionIndex, 1);
 
         if(index == 3) {

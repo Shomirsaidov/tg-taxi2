@@ -33,11 +33,11 @@ export default {
     },
     methods: {
         closeWebApp() {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.close(); // Закрытие приложения
-        } else {
-            console.error("Ошибка: Telegram WebApp не обнаружен!");
-        }
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close(); // Закрытие приложения
+            } else {
+                console.error("Ошибка: Telegram WebApp не обнаружен!");
+            }
         }
     }
 }
