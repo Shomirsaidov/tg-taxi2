@@ -1,6 +1,6 @@
 <template>
 
-    <div class="h-screen w-full absolute px-8 top-0 bg-gray-400 z-50 py-5 flex justify-center bg-opacity-75 backdrop-blur">
+    <div class="h-screen w-full absolute px-8 top-0 bg-gray-400 z-50 py-5 flex justify-center  backdrop-blur">
         <div class="border-2 rounded-lg my-bg p-4 space-y-5 pt-10">
 
             <div class="flex justify-between border-2 px-3 space-x-3 bg-white rounded-lg">

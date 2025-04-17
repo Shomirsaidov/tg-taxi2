@@ -87,7 +87,7 @@
 
 
         this.$store.state.endPoint = {title: response.data.street, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
-
+        console.log(this.$store.state.endPoint);
 
         this.$router.push(`/repeat?tg_id=${this.$route.query.tg_id}&uid=${this.$route.query.uid}`)
 

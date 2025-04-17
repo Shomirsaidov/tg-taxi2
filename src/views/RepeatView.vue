@@ -53,23 +53,23 @@
 
     <div class="flex flex-col justify-between h-full my-bg rounded-t-xl" v-if="this.$store.state.langLoaded">
 
-      <div class="my-bg rounded-t-xl mt-0 p-4">
+      <div class="my-bg rounded-t-xl mt-0 p-5">
 
       <!-- Address Fields -->
-      <div class="mt-4 space-y-2">
+      <div class="mt-1 space-y-2">
         <div @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'start'
-        }" class="flex items-center space-x-3 px-3 py-3 border rounded-md text-sm shadow-sm  bg-white">
+        }" class="flex items-center space-x-3 px-3 py-3 border rounded-md text-sm shadow-sm  bg-white cursor-pointer">
           <img src="../assets/target.svg" alt="">
           <div class="w-full text-start">{{ this.$store.state.startPoint.title }}</div>
         </div>
         <div @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'end'
-        }" class="flex items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm bg-white">
+        }" class="flex items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm bg-white cursor-pointer">
           <img src="../assets/location.svg" alt="">
-          <div class="w-full text-start">{{ this.$store.state.endPoint.title }}</div>
+          <div class="w-full text-start">{{ this.endText }}</div>
 
         </div>
       </div>
@@ -89,11 +89,24 @@
 
       <div class="hidden payment_options">
         <div clas="bg-white">
+
+        <div class="bg-white p-2 px-5 border-b flex items-center">
+          <label class="flex-1 text-start" for="p5">{{ this.$store.state.langLoaded.method_any }}</label>
+          <input
+            id="p5"
+            value="any"
+            v-model="selectedPaymentOpts"
+
+            type="checkbox"
+            class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
+          />
+        </div>
+
         <div class="bg-white p-2 px-5 border-b flex items-center">
           <label class="flex-1 text-start" for="p1">{{ this.$store.state.langLoaded.method_cash }}</label>
           <input
             id="p1"
-            :value="this.$store.state.langLoaded.method_cash"
+            value="cash"
             v-model="selectedPaymentOpts"
             type="checkbox"
             class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
@@ -103,7 +116,7 @@
           <label class="flex-1 text-start" for="p2">{{ this.$store.state.langLoaded.method_card }}</label>
           <input
             id="p2"
-            :value="this.$store.state.langLoaded.method_card"
+            value="card"
             v-model="selectedPaymentOpts"
 
             type="checkbox"
@@ -114,7 +127,7 @@
           <label class="flex-1 text-start" for="p3">{{ this.$store.state.langLoaded.method_wallets }}</label>
           <input
             id="p3"
-            :value="this.$store.state.langLoaded.method_wallets"
+            value="e-wallets"
             v-model="selectedPaymentOpts"
 
             type="checkbox"
@@ -125,24 +138,14 @@
           <label class="flex-1 text-start" for="p4">{{ this.$store.state.langLoaded.method_balance }}</label>
           <input
             id="p4"
-            :value="this.$store.state.langLoaded.method_balance"
+            value="balance"
             v-model="selectedPaymentOpts"
 
             type="checkbox"
             class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
           />
         </div>
-        <div class="bg-white p-2 px-5 border-b flex items-center">
-          <label class="flex-1 text-start" for="p5">{{ this.$store.state.langLoaded.method_any }}</label>
-          <input
-            id="p5"
-            :value="this.$store.state.langLoaded.method_any"
-            v-model="selectedPaymentOpts"
-
-            type="checkbox"
-            class="h-6 w-6 text-blue-600 rounded focus:ring focus:ring-blue-200"
-          />
-        </div>
+        
       </div>
 
 
@@ -173,7 +176,7 @@
       isSelected(index) ? 'my-blue text-white' : 'bg-white'
     ]"
   >
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between ">
       <div class="flex items-center space-x-2">
         <img :src="option.icon" alt="" />
         <div :class="isSelected(index) ? 'text-lgg font-semibold' : 'text-lgg'">
@@ -206,7 +209,7 @@
 </div>
 
 
-      <div class="mt-3 mb-20">
+      <div class="mt-5 mb-20">
           <textarea v-model="commentsForOrder" :placeholder="this.$store.state.langLoaded.enter_order_comment_btn" class="w-full px-3 py-2 rounded-md text-sm focus:ring focus:ring-blue-200 focus:outline-none"></textarea>
       </div>
 
@@ -218,10 +221,10 @@
 
 
       <div class=" flex space-x-2 font-semibold my-bg p-4 fixed w-full bottom-0">
-        <button @click="() => this.$store.state.offer = true" class="flex-1 p-2 text-sm text-white border shadow-xl rounded-xl hover:bg-blue-100 my-blue-2">
+        <button @click="() => this.$store.state.offer = true" :disabled="disabledOffer" :class="[disabledOffer ? 'bg-gray-300' : 'my-blue-2']"  class="flex-1 p-2 text-sm text-white border shadow-xl rounded-xl">
           {{ this.$store.state.langLoaded.offer_price_btn }}
         </button>
-        <button @click="createOrder" class="flex-1 p-2 text-sm text-white  rounded-xl shadow-xl my-blue">
+        <button @click="createOrder" :disabled="disabledOrder" :class="[disabledOrder ? 'bg-gray-300' : 'my-blue']" class="flex-1 p-2 text-sm text-white  rounded-xl shadow-xl my-blue">
           <span v-if="!this.creatingOrder">
             {{ this.$store.state.langLoaded.confirm_order_btn }}
           </span>
@@ -251,10 +254,10 @@ import $ from "jquery";
 
 import ModalView from "@/components/ModalView.vue";
 import ModalAlert from "@/components/ModalAlert.vue";
-import ModalError from "@/components/ModalError.vue";
+import ModalError from "@/components/ModalMessage.vue";
 
 import ModalPrompt from "@/components/ModalPrompt.vue";
-import ModalInfo from "@/components/ModalMessage.vue";
+// import ModalInfo from "@/components/ModalMessage.vue";
 import ModalSuccess from "@/components/ModalSuccess.vue";
 
 
@@ -289,22 +292,31 @@ export default {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         transportOptions: [
         {
-          label: "Такси",
+          label: "taxi",
+          value: "taxi",
+
           icon: require("../assets/car.svg"),
           details: { sum: "234 грн", time: "15 мин" },
         },
         {
-          label: "Частный водитель",
+          label: "private",
+          value: "private",
+
           icon: require( "../assets/private.svg"),
           details: { sum: "234 грн", time: "15 мин" },
         },
         {
-          label: "Мотоцикл",
+          label: "moto",
+          value: "moto",
+
           icon: require("../assets/moto.svg"),
           details: { sum: "234 грн", time: "15 мин" },
         },
         {
-          label: "Главное быстро",
+          label: "taxi",
+          value: "taxi",
+
+
           icon: require("../assets/clock.svg"),
           note: "Отметить все виды транспорта",
         },
@@ -312,6 +324,28 @@ export default {
     };
   },
   computed: {
+
+    disabledOffer() {
+      if(this.$store.state.routeInfo?.transport_type_dict.taxi_price) {
+        return 0;
+      }
+      return 1;
+    },
+
+    disabledOrder() {
+      if(this.selectedPaymentOpts.length !== 0 && this.selectedTransports.length !== 0 && this.$store.state.startPoint.title !== this.$store.state.langLoaded.enter_address_from) {
+        return false;
+      }
+      return true;
+    },
+    
+    endText() {
+      if(this.$store.state.startPoint.title == this.$store.state.langLoaded.enter_address_from) {
+        return this.$store.state.langLoaded.enter_address_to;
+      } else {
+        return this.$store.state.endPoint.title;
+      }
+    },
     routeCoordinates() {
       const start = this.$store.state.startPoint;
       const end = this.$store.state.endPoint;
@@ -360,7 +394,10 @@ export default {
   },
   async mounted() {
     // When the component is mounted, set the map as ready
+    console.log(this.disabledOrder);
     await this.preCheck();
+    console.log('now')
+    console.log(this.$store.state.endPoint)
   },
   watch: {
     // Watch the store state directly
@@ -371,18 +408,60 @@ export default {
       },
       immediate: true // Optional: Trigger the handler immediately with the current value
     },
-    'selectedPaymentOpts': {
+    '$store.state.endPoint': {
       handler(newValue, oldValue) {
-        console.log(`payment changed from ${oldValue} to ${newValue}`);
-        if(newValue.includes(this.$store.state.langLoaded.method_any)) {
-          this.selectedPaymentOpts.push(
-            this.$store.state.langLoaded.method_cash,
-            this.$store.state.langLoaded.method_wallets,
-            this.$store.state.langLoaded.method_card,
-            this.$store.state.langLoaded.method_balance
-          )
-        }
+        console.log(`endPoint changed from ${oldValue} to ${newValue}`);
+        
+        $('.payment_options').slideToggle();
       },
+      immediate: true // Optional: Trigger the handler immediately with the current value
+    },
+    selectedPaymentOpts: {
+      handler(newValue, oldValue) {
+        console.log(`after payment changed from ${oldValue} to ${newValue}`);
+
+        const hasAny = newValue.includes('any');
+        const hadAny = oldValue.includes('any');
+        const anyTypeDisselected = hadAny && !hasAny;
+
+        // If 'any' was deselected, clear all selections
+        if (anyTypeDisselected && oldValue.length == 5) {
+          if (this.selectedPaymentOpts.length !== 0) {
+            this.selectedPaymentOpts = [];
+          }
+          return;
+        }
+
+        // If 'any' is selected, set the full list only if not already set
+        if (!hadAny && hasAny && newValue.length !== 5) {
+          this.selectedPaymentOpts = [
+            'any',
+            'cash',
+            'e-wallets',
+            'card',
+            'balance'
+          ];
+        } else if(hasAny && newValue.length < 5) {
+          console.log('inside my block !')
+          this.selectedPaymentOpts = this.selectedPaymentOpts.filter(item => item !== 'any');
+        }
+
+
+        if(!hasAny && newValue.length == 4) {
+          this.selectedPaymentOpts = [
+            'any',
+            'cash',
+            'e-wallets',
+            'card',
+            'balance'
+          ];
+        }
+        
+
+        console.log(`after payment changed from ${oldValue} to ${newValue}`);
+      },
+      deep: true,
+      immediate: false
     }
   },
   methods: {
@@ -390,6 +469,9 @@ export default {
       $('.payment_options').slideToggle();
     },
     selectOption(index) {
+
+      console.log(this.selectOptions);
+       
       if (!this.selectedOptions) {
         this.selectedOptions = [];
       }
@@ -403,6 +485,7 @@ export default {
         }
 
       } else {
+
         this.selectedOptions.splice(optionIndex, 1);
 
         if(index == 3) {
@@ -414,7 +497,7 @@ export default {
       this.selectedTransports = []
 
       this.selectedOptions.forEach(key => {
-        this.selectedTransports.push(this.transportOptions[key].label)
+        this.selectedTransports.push(this.transportOptions[key].value)
       })
 
       console.log(this.selectedTransports)
@@ -434,24 +517,17 @@ export default {
         this.infoModal = true;
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
-        
-
+      
         this.transportOptions[0].label = this.$store.state.langLoaded.transport_taxi;
         this.transportOptions[1].label = this.$store.state.langLoaded.transport_private;
         this.transportOptions[2].label = this.$store.state.langLoaded.transport_moto;
         this.transportOptions[3].label = this.$store.state.langLoaded.transport_all;
 
-        console.log(this.$store.state.langLoaded)
 
         this.calcDetails();
-
-
       }
 
 
-    },
-    isSelected(index) {
-      return this.selectedOptions.includes(index);
     },
     async calcDetails() {
       console.log('getting details...')
@@ -471,6 +547,9 @@ export default {
       console.log(response.data);
       this.$store.state.routeInfo = response.data
       this.$store.state.zoom = this.setNeededZoom();
+
+      $('.payment_options').slideToggle();
+
       
     },
     setNeededZoom() {
@@ -486,15 +565,17 @@ export default {
       return optimalZoom;
 
     },
+    isSelected(index) {
+      return this.selectedOptions.includes(index);
+    },
     async createOrder() {
 
 
       console.log(this.selectedPaymentOpts)
+      this.creatingOrder = true
 
-      if(this.selectedPaymentOpts.length !== 0  && this.selectedTransports.length !== 0) {
+      try {
 
-        this.creatingOrder = true
-        
         const response = await axios.post(`${process.env.VUE_APP_API_URL}/create-order/`, this.finalOrderData)
 
         if(response.data.status == 'ok') {
@@ -502,9 +583,29 @@ export default {
           this.$store.state.successMessage = response.data.message;
           this.creatingOrder = false
 
+        } else {
+          this.creatingOrder = false
+          this.$store.state.error = true;
         }
 
+
       }
+
+      catch(e) {
+
+        
+        this.creatingOrder = false
+        this.$store.state.error = true;
+        this.$store.state.errorText = e.message;
+
+        console.log(this.$store.errorText);
+
+      }
+      
+      
+      
+
+      
 
 
       
