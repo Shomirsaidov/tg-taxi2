@@ -33,7 +33,7 @@
         </div>
         <div class="flex justify-between">
           <p class="text-blue-500 text-start text-lg font-semibold mt-2">{{ item.data.sum }} {{ item.data.currency }} </p>
-          <button class="text-blue-800" @click="repeatTrip(item)">Повторить поездку</button>
+          <button class="text-blue-800" @click="repeatTrip(item)">{{ this.$store.state.langLoaded.rout_repeat  }}</button>
         </div>
       </div>
     </div>
