@@ -16,7 +16,7 @@
 
 
     <!-- Map Section -->
-    <div v-if="!this.$store.state.modalOn && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map " >
+    <div v-if="!this.$store.state.modalOn && !this.$store.state.error && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map " >
 
       <l-map
         class="w-full"
