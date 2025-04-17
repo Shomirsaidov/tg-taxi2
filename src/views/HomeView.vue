@@ -510,7 +510,7 @@ export default {
       this.$store.state.recentLocation = response.data.predefined_place_id_from;
 
       console.log(response); 
-      if(response.status !== 200) {
+      if(response.status == 'error') {
         this.infoModal = true;
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
