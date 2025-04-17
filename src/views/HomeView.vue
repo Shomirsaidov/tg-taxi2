@@ -556,6 +556,8 @@ export default {
         } else {
           this.creatingOrder = false
           this.$store.state.error = true;
+
+          this.$store.state.errorText = response.data.status;
         }
 
 
