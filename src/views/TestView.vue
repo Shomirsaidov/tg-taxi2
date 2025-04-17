@@ -224,7 +224,7 @@
       </div>
 
 
-      <div class=" flex space-x-2 font-semibold my-bg p-4 fixed w-full bottom-0">
+      <div class=" flex space-x-2 font-semibold my-bg p-4 fixed w-full bottom-0" v-if="!this.$store.state.modalOn">
         <button @click="() => this.$store.state.offer = true" :disabled="disabledOffer" :class="[disabledOffer ? 'bg-gray-300' : 'my-blue-2']"  class="flex-1 p-2 text-sm text-white border shadow-xl rounded-xl">
           {{ this.$store.state.langLoaded.offer_price_btn }}
         </button>

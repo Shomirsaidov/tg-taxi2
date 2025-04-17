@@ -104,9 +104,9 @@ export default {
 
 
             if(recent) {
-              a.title = a.street
+              a.title = a.street + ", " + a.city
             } else {
-              a.title = p.title
+              a.title = p.title + ", " + a.city
             }
 
 
@@ -124,9 +124,9 @@ export default {
             let a = response.data
 
             if(recent) {
-              a.title = a.street
+              a.title = a.street + ", " + a.city
             } else {
-              a.title = p.title
+              a.title = p.title + ", " + a.city
             }
 
 

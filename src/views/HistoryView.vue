@@ -74,7 +74,7 @@
             })
 
         console.log(response.data)
-        this.$store.state.startPoint = {title: response.data.street, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
+        this.$store.state.startPoint = {title: response.data.street + ", "  + response.data.city, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
 
         response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
                 place_id: trip.data.place_id_to,
@@ -86,7 +86,7 @@
         this.$store.state.chooseMode = 'end';
 
 
-        this.$store.state.endPoint = {title: response.data.street, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
+        this.$store.state.endPoint = {title: response.data.street + ", "  + response.data.city, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
         console.log(this.$store.state.endPoint);
 
         this.$router.push(`/repeat?tg_id=${this.$route.query.tg_id}&uid=${this.$route.query.uid}`)
