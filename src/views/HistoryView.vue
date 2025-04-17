@@ -55,6 +55,18 @@
       };
     },
     async mounted() {
+
+
+      const r = await axios.post(`${process.env.VUE_APP_API_URL}/check-order/`, {
+                uid: this.$route.query.uid,
+                tg_id: this.$route.query.tg_id
+            })
+
+      
+      this.$store.state.langLoaded = r.data.lang_text;
+
+
+
       const response = await axios.post(`${process.env.VUE_APP_API_URL}/history/`, {
                 tg_id: this.$route.query.tg_id
             })
