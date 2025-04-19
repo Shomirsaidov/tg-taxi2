@@ -14,6 +14,10 @@
     <ModalSuccess v-if="this.$store.state.successModal"/>
 
 
+    <div class="p-3 bg-white text-center font-semibold border-b" v-if="is_test_order">
+      Тестовый заказ
+    </div>
+
 
     <!-- Map Section -->
     <div v-if="!this.$store.state.modalOn && !this.$store.state.error && !this.$store.state.offer && !this.$store.state.successModal && !this.$store.state.cancel && this.$store.state.langLoaded" class="relative map " >
@@ -325,6 +329,14 @@ export default {
   },
   computed: {
 
+    is_test_order() {
+      if(this.$route.query.is_test_order == 'true') {
+        return true
+      }
+
+      return false
+    },
+
     disabledOffer() {
       if(this.$store.state.routeInfo?.transport_type_dict.taxi_price) {
         return 0;
@@ -377,6 +389,7 @@ export default {
             passenger_transport_type: this.selectedTransports,
             comment: this.commentsForOrder,
             price: this.$store.state.offeredPrice,
+            is_test_order: this.is_test_order
         }
       }
 
@@ -388,6 +401,8 @@ export default {
           passenger_pay_methods: this.selectedPaymentOpts,
           passenger_transport_type: this.selectedTransports,
           comment: this.commentsForOrder,
+          is_test_order: this.is_test_order
+
       }
 
     }
