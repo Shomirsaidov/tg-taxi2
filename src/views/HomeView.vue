@@ -68,14 +68,14 @@
           <img src="../assets/target.svg" alt="">
           <div class="w-full text-start">{{ this.$store.state.startPoint.title }}</div>
         </div>
-        <div @click="() => {
+        <button :disabled="disabledEndSelecion" @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'end'
-        }" class="flex items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm bg-white cursor-pointer">
+        }" :class="[disabledEndSelecion ? 'bg-gray-200 text-gray-400' : 'bg-white']" class="flex w-full items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm cursor-pointer">
           <img src="../assets/location.svg" alt="">
           <div class="w-full text-start">{{ this.endText }}</div>
 
-        </div>
+        </button>
       </div>
 
       <!-- Payment -->
@@ -334,6 +334,13 @@ export default {
         return true
       } 
 
+      return false
+    },
+
+    disabledEndSelecion() {
+      if(this.$store.state.startPoint.title == this.$store.state.langLoaded.enter_address_from) {
+        return true
+      }
       return false
     },
 
