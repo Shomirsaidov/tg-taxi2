@@ -330,7 +330,7 @@ export default {
   computed: {
 
     is_test_order() {
-      if(this.$route.query.is_test_order == 'true') {
+      if(this.$route.query.is_test == 'true') {
         return true
       } 
 
@@ -389,7 +389,7 @@ export default {
             passenger_transport_type: this.selectedTransports,
             comment: this.commentsForOrder,
             price: this.$store.state.offeredPrice,
-            is_test_order: this.is_test_order
+            is_test: this.is_test_order
         }
       }
 
@@ -401,7 +401,7 @@ export default {
           passenger_pay_methods: this.selectedPaymentOpts,
           passenger_transport_type: this.selectedTransports,
           comment: this.commentsForOrder,
-          is_test_order: this.is_test_order
+          is_test: this.is_test_order
 
       }
 
