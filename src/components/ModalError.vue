@@ -7,7 +7,7 @@
             </div>
             <h2 class="text-xl font-bold">{{ this.$store.state.errorMessage }}</h2>
             <div class=" flex space-x-2 font-semibold">
-                <button class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
+                <button @click="closeWebApp" class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
                     OK
                 </button>
                 
@@ -25,7 +25,16 @@
 
 export default {
     name: 'Modal Alert',
-    props: ['q']
+    props: ['q'],
+    methods: {
+        closeWebApp() {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close(); // Закрытие приложения
+            } else {
+                console.error("Ошибка: Telegram WebApp не обнаружен!");
+            }
+        }
+    }
 }
 
 

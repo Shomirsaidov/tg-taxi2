@@ -10,7 +10,7 @@
     <ModalAlert v-if="this.$store.state.cancel"/>
     <ModalError v-if="this.$store.state.error"/>
 
-    <ModalInfo v-if="this.infoModal"/>
+    
     <ModalSuccess v-if="this.$store.state.successModal"/>
 
 
@@ -261,7 +261,7 @@ import ModalAlert from "@/components/ModalAlert.vue";
 import ModalError from "@/components/ModalMessage.vue";
 
 import ModalPrompt from "@/components/ModalPrompt.vue";
-// import ModalInfo from "@/components/ModalMessage.vue";
+import ModalInfo from "@/components/ModalMessage.vue";
 import ModalSuccess from "@/components/ModalSuccess.vue";
 
 
@@ -280,7 +280,7 @@ export default {
     ModalAlert,
     ModalPrompt,
     ModalSuccess,
-    ModalError
+    ModalError,
   },
   data() {
     return {
@@ -526,7 +526,10 @@ export default {
 
       console.log(response); 
       if(response.data.status == 'error') {
-        this.infoModal = true;
+        console.error("some error")
+        this.$store.state.error = true;
+        this.$store.state.errorText = response.data.message;
+
       } else {
         this.$store.state.langLoaded = response.data.lang_text;
         let textFrom = this.$store.state.langLoaded.enter_address_from;

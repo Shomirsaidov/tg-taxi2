@@ -8,7 +8,7 @@
             <h2 class="text-xl font-bold">{{ this.$store.state.errorText }}</h2>
             <div class=" flex space-x-2 font-semibold">
                 <button @click="closeWebApp" class="flex-1 p-3  text-white  rounded-xl shadow-xl hover:bg-red-600 my-red">
-                    {{ this.$store.state.langLoaded.close_app }}
+                    {{ this.$store.state.langLoaded?.close_app || 'OK' }}
                 </button>
                 
                 
