@@ -36,7 +36,33 @@
           <button class="text-blue-800" @click="repeatTrip(item)">{{ this.$store.state.langLoaded.rout_repeat  }}</button>
         </div>
       </div>
+
+
+      <div v-if="hasMore" class="flex justify-center my-4">
+        <button
+          @click="loadHistory"
+          class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600"
+          :disabled="loading"
+        >
+          
+
+          <div class="flex flex-col justify-center items-center h-full rounded-t-xl" v-if="loading">
+            <div class="flex items-center justify-center ">
+              <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-e-4 border-white"></div>
+            </div>
+          </div>
+
+          <span v-else class="font-bold text-xl">></span>
+        </button>
+      </div>
+
+      
     </div>
+
+
+    <!-- Load More Button -->
+  
+
 
 
 
@@ -44,72 +70,87 @@
 
   </template>
   
+ 
+
   <script>
-
   import axios from 'axios';
-
+  
   export default {
     data() {
       return {
-        history: null  
+        history: [],
+        page: 1,
+        hasMore: true,
+        loading: false
       };
     },
     async mounted() {
-
-
       const r = await axios.post(`${process.env.VUE_APP_API_URL}/check-order/`, {
-                uid: this.$route.query.uid,
-                tg_id: this.$route.query.tg_id
-            })
-
-      
+        uid: this.$route.query.uid,
+        tg_id: this.$route.query.tg_id
+      });
       this.$store.state.langLoaded = r.data.lang_text;
-
-
-
-      const response = await axios.post(`${process.env.VUE_APP_API_URL}/history/`, {
-                tg_id: this.$route.query.tg_id
-            })
-
-      console.log(response.data.result);
-
-      this.history = response.data.result;
-
+  
+      await this.loadHistory(); // Load initial page
     },
     methods: {
+      async loadHistory() {
+        if (this.loading || !this.hasMore) return;
+  
+        this.loading = true;
+  
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/history/`, {
+          tg_id: this.$route.query.tg_id,
+          page: this.page
+        });
+  
+        const newItems = response.data.result || [];
+        if (newItems.length === 0) {
+          this.hasMore = false;
+        } else {
+          this.history = [...this.history, ...newItems];
+          this.page++;
+        }
+  
+        this.loading = false;
+      },
+  
       async repeatTrip(trip) {
-
-        
         let response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
-                place_id: trip.data.place_id_from,
-                lang_code: "ru"
-            })
-
-        console.log(response.data)
-        this.$store.state.startPoint = {title: response.data.street + ", "  + response.data.city, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
-
+          place_id: trip.data.place_id_from,
+          lang_code: "ru"
+        });
+  
+        this.$store.state.startPoint = {
+          title: response.data.street + ", " + response.data.city,
+          lat: response.data.lat,
+          lon: response.data.lon,
+          place_id: response.data.place_id
+        };
+  
         response = await axios.post(`${process.env.VUE_APP_API_URL}/get-place-details/`, {
-                place_id: trip.data.place_id_to,
-                lang_code: "ru"
-            })
-        console.log(response.data)
-
-
+          place_id: trip.data.place_id_to,
+          lang_code: "ru"
+        });
+  
         this.$store.state.chooseMode = 'end';
-
-
-        this.$store.state.endPoint = {title: response.data.street + ", "  + response.data.city, lat: response.data.lat,lon: response.data.lon, place_id: response.data.place_id };
-        console.log(this.$store.state.endPoint);
-
-        this.$router.push(`/repeat?tg_id=${this.$route.query.tg_id}&uid=${this.$route.query.uid}`)
-
-
-
+        this.$store.state.endPoint = {
+          title: response.data.street + ", " + response.data.city,
+          lat: response.data.lat,
+          lon: response.data.lon,
+          place_id: response.data.place_id
+        };
+  
+        this.$router.push(`/repeat?tg_id=${this.$route.query.tg_id}&uid=${this.$route.query.uid}`);
       }
     }
   };
-
   </script>
+  
+
+
+
+
   
   <style>
   body {
