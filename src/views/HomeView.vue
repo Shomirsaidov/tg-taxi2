@@ -14,8 +14,8 @@
     <ModalSuccess v-if="this.$store.state.successModal"/>
 
 
-    <div class="p-3 bg-white text-center font-semibold border-b" v-if="is_test_order">
-      Тестовый заказ
+    <div class="p-3 bg-white text-center font-semibold border-b" v-if="is_test_order && this.$store.state.langLoaded">
+      {{ this.$store.state.langLoaded.test_order }}
     </div>
 
 
@@ -332,7 +332,7 @@ export default {
     is_test_order() {
       if(this.$route.query.is_test_order == 'true') {
         return true
-      }
+      } 
 
       return false
     },
