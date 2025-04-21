@@ -3,10 +3,10 @@
     <div class="h-full w-full absolute top-0 bg-gray-400 z-50 flex justify-center  backdrop-blur">
         <div class="border-2 rounded-lg my-bg h-full w-full p-4 space-y-5 pt-10">
 
-            <div class="flex justify-between border-2 px-3 space-x-3 bg-white rounded-lg">
+            <div class="w-full border-2 px-3 space-x-3 bg-white rounded-lg">
                 <div  class="flex">
                     <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/arrow-left.svg" alt="">
-                    <input :placeholder="$store.state.langLoaded.enter_address_to" @input="updateLocs" v-model="inpValue" class="text-lg p-3 outline-none font-semibold" type="text">
+                    <input :placeholder="$store.state.langLoaded.enter_address_to" @input="updateLocs" v-model="inpValue" class="text-lg p-3 w-full outline-none font-semibold" type="text">
                 </div>
                 <!-- <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/clear.svg" alt=""> -->
             </div>
