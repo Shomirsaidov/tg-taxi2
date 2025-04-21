@@ -548,6 +548,9 @@ export default {
 
         };
 
+
+        this.$store.state.endPoint.title = this.$store.state.langLoaded.enter_address_to;
+
         console.log(this.$store.state.startPoint)
 
         this.transportOptions[0].label = this.$store.state.langLoaded.transport_taxi;
