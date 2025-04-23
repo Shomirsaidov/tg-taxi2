@@ -71,7 +71,7 @@
         <button :disabled="disabledEndSelecion" @click="() => {
           this.$store.state.modalOn = true
           this.$store.state.chooseMode = 'end'
-        }" :class="[disabledEndSelecion ? 'bg-gray-200 text-gray-400' : 'bg-white']" class="flex w-full items-center space-x-3 px-3 py-2 border rounded-md text-sm shadow-sm cursor-pointer">
+        }" :class="[disabledEndSelecion ? 'bg-gray-200 text-gray-400' : 'bg-white']" class="flex w-full items-center space-x-3 px-3 py-2 border rtl:space-x-reverse rounded-md text-sm shadow-sm cursor-pointer">
           <img src="../assets/location.svg" alt="">
           <div class="w-full text-start">{{ this.endText }}</div>
 
@@ -417,7 +417,6 @@ export default {
   async mounted() {
     // When the component is mounted, set the map as ready
     await this.preCheck();
-
 
     const langId = parseInt(this.$route.query.lang_id);
     const rtlLanguages = [4, 10]; // Arabic and Hebrew
