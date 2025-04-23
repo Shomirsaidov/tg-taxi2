@@ -417,6 +417,31 @@ export default {
   async mounted() {
     // When the component is mounted, set the map as ready
     await this.preCheck();
+
+
+    const langId = parseInt(this.$route.query.lang_id);
+    const rtlLanguages = [4, 10]; // Arabic and Hebrew
+
+    console.log(langId)
+
+    if (rtlLanguages.includes(langId)) {
+      document.documentElement.setAttribute('dir', 'rtl');
+      document.body.classList.add('rtl');
+      console.log('the arabic or hebrew detected !')
+
+      document.querySelectorAll('.flex').forEach(el => {
+        if ([...el.classList].some(cls => cls.startsWith('space-x-'))) {
+          el.classList.add('space-x-reverse');
+        }
+      });
+
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+      document.body.classList.remove('rtl');
+    }
+
+
+
   },
   watch: {
     // Watch the store state directly
@@ -658,6 +683,26 @@ export default {
   background-image: url(../assets/background.png);
   background-size: cover;
 }
+
+
+body.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+body.rtl .text-start {
+  text-align: right !important;
+}
+
+
+
+
+/* 
+body.rtl .flex:not(.flex-col):not(.flex-col-reverse) {
+  flex-direction: row-reverse;
+} */
+
+
 
 
 </style>

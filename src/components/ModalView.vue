@@ -5,7 +5,7 @@
 
             <div class="w-full border-2 px-3 space-x-3 bg-white rounded-lg">
                 <div  class="flex">
-                    <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/arrow-left.svg" alt="">
+                    <img @click="() => this.$store.state.modalOn = false" width="17" src="../assets/clear.svg" alt="">
                     <input :placeholder="$store.state.langLoaded.enter_address_to" @input="updateLocs" v-model="inpValue" class="text-lg p-3 w-full outline-none font-semibold" type="text">
                 </div>
                 <!-- <img @click="() => this.$store.state.modalOn = false" width="25" src="../assets/clear.svg" alt=""> -->
@@ -16,7 +16,7 @@
                 
 
                 <div 
-                class="flex items-center space-x-3 border-b-2 border-gray-300 p-3 cursor-pointer"
+                class="flex items-center rtl:space-x-reverse  space-x-3 border-b-2 border-gray-300 p-3 cursor-pointer"
                 v-if="!inpValue && $store.state.chooseMode == 'start'"
                 
                 @click="selectPoint(this.$store.state.recentLocation, true)">
@@ -34,7 +34,7 @@
                 </div>
 
                 <div v-for="address in addresses" 
-                class="flex items-center space-x-3 border-b-2 border-gray-300 p-3 cursor-pointer"
+                class="flex items-center rtl:space-x-reverse space-x-3 border-b-2 border-gray-300 p-3 cursor-pointer"
                 @click="selectPoint(address)">
                     <img src="../assets/location.svg" alt="">
                     <div>
