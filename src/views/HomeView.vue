@@ -572,6 +572,8 @@ export default {
 
         };
 
+        
+
 
         this.$store.state.endPoint.title = this.$store.state.langLoaded.enter_address_to;
 
